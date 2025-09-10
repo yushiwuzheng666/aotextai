@@ -214,19 +214,13 @@ def debug():
 @app.route('/')
 def index():
     """首页"""
-    try:
-        lang = get_current_language()
-        records = feishu_api.get_records(BASE_ID, TABLE_ID)
-        blogs = format_blog_data(records)
-        
-        # 传递翻译文本到模板
-        translations = {key: get_text(key, lang) for key in TRANSLATIONS[lang].keys()}
-        
-        return render_template('index.html', blogs=blogs, lang=lang, t=translations)
-    except Exception as e:
-        print(f"首页加载异常: {e}")
-        # 如果模板加载失败，直接返回带样式的HTML
-        return f"""
+    # 暂时强制使用内置HTML以确保中国红UI显示
+    lang = get_current_language()
+    records = feishu_api.get_records(BASE_ID, TABLE_ID)
+    blogs = format_blog_data(records)
+    
+    # 直接返回带中国红样式的HTML
+    return f"""
         <!DOCTYPE html>
         <html>
         <head>
