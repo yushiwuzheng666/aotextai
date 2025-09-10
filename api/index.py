@@ -204,10 +204,32 @@ def index():
         return render_template('index.html', blogs=blogs, lang=lang, t=translations)
     except Exception as e:
         print(f"首页加载异常: {e}")
-        lang = get_current_language()
-        translations = {key: get_text(key, lang) for key in TRANSLATIONS[lang].keys()}
-        error_msg = get_text('loading_error', lang)
-        return render_template('index.html', blogs=[], error=error_msg, lang=lang, t=translations)
+        # 如果模板加载失败，返回简单的HTML
+        return f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>AO生态文章AI总结</title>
+            <meta charset="UTF-8">
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 40px; }}
+                .error {{ color: red; }}
+                .debug {{ background: #f0f0f0; padding: 10px; margin: 10px 0; }}
+            </style>
+        </head>
+        <body>
+            <h1>AO生态文章AI总结</h1>
+            <div class="error">模板加载失败: {str(e)}</div>
+            <div class="debug">
+                <h3>调试信息:</h3>
+                <p>当前工作目录: {os.getcwd()}</p>
+                <p>模板文件夹: {app.template_folder}</p>
+                <p>静态文件夹: {app.static_folder}</p>
+            </div>
+            <a href="/api/test">测试API连接</a>
+        </body>
+        </html>
+        """
 
 @app.route('/detail/<record_id>')
 def detail(record_id):
