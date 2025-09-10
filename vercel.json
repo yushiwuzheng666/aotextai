@@ -17,10 +17,6 @@
     }
   ],
   "env": {
-    "FLASK_ENV": "production",
-    "FEISHU_APP_ID": "@feishu_app_id",
-    "FEISHU_APP_SECRET": "@feishu_app_secret",
-    "BASE_ID": "@base_id",
-    "TABLE_ID": "@table_id"
+    "FLASK_ENV": "production"
   }
 }
