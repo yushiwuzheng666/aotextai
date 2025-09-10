@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="{{ 'zh-CN' if lang == 'zh' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ t.site_title }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <nav class="nav">
+                <a href="{{ url_for('index') }}" class="logo">
+                    <span class="logo-text">{{ t.site_title }}</span>
+                </a>
+                <div class="nav-links">
+                    <a href="{{ url_for('index') }}" class="nav-link">{{ t.home }}</a>
+                    <a href="https://uia84zzwgf.feishu.cn/share/base/form/shrcnpVCPowqvVVwosqDqMyBBOd" class="nav-link" target="_blank">{{ t.submit_article }}</a>
+                    
+                    <!-- 语言切换按钮 -->
+                    <div class="language-switcher">
+                        <button onclick="switchLanguage('zh')" class="lang-btn {{ 'active' if lang == 'zh' else '' }}">中文</button>
+                        <button onclick="switchLanguage('en')" class="lang-btn {{ 'active' if lang == 'en' else '' }}">EN</button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 AO INSIGHT. {{ t.data_source }}</p>
+        </footer>
+    </div>
+
+    <script>
+    function switchLanguage(lang) {
+        fetch('/set_language/' + lang)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    location.reload();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

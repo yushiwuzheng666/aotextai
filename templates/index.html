@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t.home }} - {{ t.site_title }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1 class="hero-title">{{ t.welcome_title }}</h1>
+    <p class="hero-subtitle">{{ t.welcome_subtitle }}</p>
+</div>
+
+{% if error %}
+<div class="error-message">
+    <p>{{ error }}</p>
+    <a href="{{ url_for('test_api') }}" class="btn btn-secondary">{{ t.check_connection }}</a>
+</div>
+{% endif %}
+
+<div class="blog-grid">
+    {% if blogs %}
+        {% for blog in blogs %}
+        <article class="blog-card">
+            <div class="blog-header">
+                <h2 class="blog-title">{{ blog.title }}</h2>
+            </div>
+            
+            {% if blog.quote %}
+            <div class="blog-quote">
+                <blockquote>{{ blog.quote }}</blockquote>
+            </div>
+            {% endif %}
+            
+            {% if blog.review %}
+            <div class="blog-review">
+                <h3>{{ t.review }}</h3>
+                <p>{{ blog.review }}</p>
+            </div>
+            {% endif %}
+            
+            <div class="blog-preview">
+                <p>{{ blog.preview }}</p>
+            </div>
+            
+            <div class="blog-footer">
+                {% if blog.external_link %}
+                <a href="{{ blog.external_link }}" 
+                   class="btn btn-primary" 
+                   target="_blank">
+                    {{ t.read_more }}
+                </a>
+                {% else %}
+                <a href="{{ url_for('detail', record_id=blog.id) }}" 
+                   class="btn btn-primary" 
+                   target="_blank">
+                    {{ t.read_more }}
+                </a>
+                {% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <h2>{{ t.no_articles }}</h2>
+            <p>{{ t.no_articles_desc }}</p>
+            <a href="{{ url_for('test_api') }}" class="btn btn-secondary">{{ t.check_connection }}</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 添加卡片悬停效果
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.blog-card');
+    
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ blog.title }} - {{ t.site_title }}{% endblock %}
+
+{% block content %}
+<div class="article-container">
+    <article class="article">
+        <header class="article-header">
+            <h1 class="article-title">{{ blog.title }}</h1>
+            <div class="article-meta">
+                <span class="meta-item">{{ t.data_source_label }}</span>
+            </div>
+        </header>
+
+        {% if blog.quote %}
+        <div class="article-quote">
+            <div class="quote-icon">💡</div>
+            <blockquote class="featured-quote">{{ blog.quote }}</blockquote>
+        </div>
+        {% endif %}
+
+        {% if blog.review %}
+        <section class="article-section">
+            <h2 class="section-title">{{ t.review }}</h2>
+            <div class="review-content">
+                {{ blog.review | replace('\n', '<br>') | safe }}
+            </div>
+        </section>
+        {% endif %}
+
+        <section class="article-section">
+            <h2 class="section-title">{{ t.article_content }}</h2>
+            <div class="article-content">
+                {{ blog.content | replace('\n', '<br>') | safe }}
+            </div>
+        </section>
+
+        <footer class="article-footer">
+            <div class="article-actions">
+                <button onclick="window.history.back()" class="btn btn-secondary">
+                    ← {{ t.back }}
+                </button>
+                <button onclick="window.close()" class="btn btn-outline">
+                    {{ t.close_window }}
+                </button>
+            </div>
+        </footer>
+    </article>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 平滑滚动到顶部
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// 添加返回顶部按钮
+document.addEventListener('DOMContentLoaded', function() {
+    // 创建返回顶部按钮
+    const backToTop = document.createElement('button');
+    backToTop.innerHTML = '↑';
+    backToTop.className = 'back-to-top';
+    backToTop.onclick = scrollToTop;
+    document.body.appendChild(backToTop);
+
+    // 监听滚动事件
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            backToTop.classList.add('show');
+        } else {
+            backToTop.classList.remove('show');
+        }
+    });
+});
+</script>
+{% endblock %}

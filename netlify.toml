@@ -1,0 +1,11 @@
+[build]
+  publish = "."
+  command = "echo 'No build required'"
+
+[build.environment]
+  PYTHON_VERSION = "3.9"
+
+[[redirects]]
+  from = "/*"
+  to = "/api/index.py"
+  status = 200
