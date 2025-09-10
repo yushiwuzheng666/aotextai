@@ -4,12 +4,62 @@ import json
 import time
 import os
 import sys
+from dotenv import load_dotenv
+
+# 加载环境变量
+load_dotenv()
 
 # 添加项目根目录到Python路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from config import Config
-from translations import get_text, TRANSLATIONS
+# 直接定义配置类，避免导入问题
+class Config:
+    """应用配置类"""
+    
+    # Flask配置
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
+    DEBUG = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    
+    # 飞书应用配置
+    FEISHU_APP_ID = os.environ.get('FEISHU_APP_ID') or "cli_a8341be1df7f901c"
+    FEISHU_APP_SECRET = os.environ.get('FEISHU_APP_SECRET') or "bLbLrrlOJjQCRXcSruTbshbd8fgPOms0"
+    
+    # 多维表格配置
+    BASE_ID = os.environ.get('BASE_ID') or "Ff4vb1pI5aLIh2s41mgcphRCnJh"
+    TABLE_ID = os.environ.get('TABLE_ID') or "tbl4YNGcNh3Qhepi"
+    
+    # 飞书API相关配置
+    FEISHU_API_BASE_URL = "https://open.feishu.cn/open-apis"
+
+# 直接定义翻译功能，避免导入问题
+TRANSLATIONS = {
+    'zh': {
+        'title': 'AO生态文章AI总结',
+        'subtitle': '探索AO生态的最新动态和深度见解',
+        'search_placeholder': '搜索文章...',
+        'read_more': '阅读全文',
+        'back_to_home': '返回首页',
+        'loading_error': '加载失败，请稍后重试',
+        'language': '语言',
+        'chinese': '中文',
+        'english': 'English'
+    },
+    'en': {
+        'title': 'AO Ecosystem AI Article Summary',
+        'subtitle': 'Explore the latest trends and insights in the AO ecosystem',
+        'search_placeholder': 'Search articles...',
+        'read_more': 'Read Full Article',
+        'back_to_home': 'Back to Home',
+        'loading_error': 'Loading failed, please try again later',
+        'language': 'Language',
+        'chinese': '中文',
+        'english': 'English'
+    }
+}
+
+def get_text(key, lang='zh'):
+    """获取翻译文本"""
+    return TRANSLATIONS.get(lang, TRANSLATIONS['zh']).get(key, key)
 
 app = Flask(__name__, 
            template_folder='../templates',
@@ -228,5 +278,8 @@ def test_api():
         })
 
 # Vercel需要的handler函数
-def handler(request):
-    return app(request.environ, lambda status, headers: None)
+def handler(request, response):
+    return app(request, response)
+
+# 为了兼容性，也导出app
+app = app
